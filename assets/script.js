@@ -1,96 +1,50 @@
-let leftArrow = document.querySelector(".arrow_left");
-let rightArrow = document.querySelector(".arrow_right");
-
-
 const slides = [
 	{
-		image:"./assets/images/slideshow/slide1.jpg",
+		image:"slide1.jpg",
 		tagLine:"Impressions tous formats <span>en boutique et en ligne</span>"
 	},
 	{
-		image:"./assets/images/slideshow/slide2.jpg",
+		image:"slide2.jpg",
 		tagLine:"Tirages haute définition grand format <span>pour vos bureaux et events</span>"
 	},
 	{
-		image:"./assets/images/slideshow/slide3.jpg",
+		image:"slide3.jpg",
 		tagLine:"Grand choix de couleurs <span>de CMJN aux pantones</span>"
 	},
 	{
-		image:"./assets/images/slideshow/slide4.png",
+		image:"slide4.png",
 		tagLine:"Autocollants <span>avec découpe laser sur mesure</span>"
 	}
 ]
 
 //Ajout des bulletpoints dynamique en fonction du nombre de slides
-{
-	for(let i = 0; i < slides.length; i++){
-		const dots = document.querySelector(".dots");
-		let bulletPoint = document.createElement("div");
-		dots.appendChild(bulletPoint);
-		bulletPoint.classList.add("dot", "dot"+i)
-	}
+for(let i = 0; i < slides.length; i++){
+	const dots = document.querySelector(".dots");
+	dots.appendChild(document.createElement("div")).classList.add("dot");
 }
 
-
-// Sélecteur de slide
-
-imageSelected = 0;
+// Fonction pour changer de slide
+let slideSelected = 0;
 let allDotList = document.querySelectorAll(".dot");
-let bannerImage = document.querySelector(".banner-img");
-let bannerTagLine = document.querySelector("#banner p");
-let firstDot = document.querySelector(".dot0");
-firstDot.classList.add("dot_selected");
-
-// Enlever le style de la slide non selectionnée
-function removeAllActiveDots(){
-	for(let i = 0; i < allDotList.length; i++){
-		if(allDotList[i].classList.contains("dot_selected")){
-			allDotList[i].classList.remove("dot_selected")
-		};
-	};
+allDotList[0].classList.add("dot_selected");
+function changeSlide(count){
+	allDotList[slideSelected].classList.remove("dot_selected");
+	slideSelected = slideSelected + count;
+	if(slideSelected < 0){
+		slideSelected = slides.length -1;
+	}
+	if(slideSelected >= slides.length){
+		slideSelected = 0;
+	}
+	allDotList[slideSelected].classList.add("dot_selected");
+	document.querySelector(".banner-img").src = "./assets/images/slideshow/"+slides[slideSelected].image;
+	document.querySelector("#banner p").innerHTML = slides[slideSelected].tagLine;
 }
 
-// ajouter le style du bulletpoint et le contenu de la slide selectionnée
-function definirCurrentSlide(imageSelectionnée){
-	let currentSlide = slides[imageSelectionnée].image;
-	let currentTagLine = slides[imageSelectionnée].tagLine;
-	let activeDot = document.querySelector(".dot"+imageSelectionnée);
-	activeDot.classList.add("dot_selected");
-	bannerImage.src = currentSlide;
-	let bannerTagLineContent =  `
-		${currentTagLine}
-	`;
-	bannerTagLine.innerHTML = bannerTagLineContent;
-}
-
-//Fonction du click sur les flèches pour fonctionnement complet du carrousel
-leftArrow.addEventListener("click", () =>{
-	if(imageSelected===0){
-		imageSelected = slides.length -1;
-	}else{
-		imageSelected--;
-	}
-	removeAllActiveDots();
-	definirCurrentSlide(imageSelected)
+//Event du clic sur les flèches
+document.querySelector(".arrow_left").addEventListener("click", () =>{
+	changeSlide(-1);
 });
-rightArrow.addEventListener("click", () =>{
-	if(imageSelected===slides.length-1){
-		imageSelected = 0;
-	}else{
-		imageSelected++;
-	}
-	removeAllActiveDots();
-	definirCurrentSlide(imageSelected)
+document.querySelector(".arrow_right").addEventListener("click", () =>{
+	changeSlide(1);
 });
-
-
-
-
-
-
-
-
-
-
-
-
